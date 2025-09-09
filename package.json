@@ -1,0 +1,22 @@
+{
+  "name": "habitat-control",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interfaz web para monitoreo y control de hábitats IoT",
+  "homepage": "https://habitat-control.vercel.app",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1"
+  },
+  "keywords": ["iot", "react", "supabase", "habitat", "control", "vercel"],
+  "author": "Wilians Iván López",
+  "license": "MIT"
+}
