@@ -13,7 +13,9 @@ function HabitatCard({ habitatId, releId }) {
     try {
       const res = await fetch('https://habitat-api.vercel.app/api/leer');
       const json = await res.json();
-      const datosFiltrados = json.datos.filter(d => d.habitat_id === habitatId);
+      const datosFiltrados = json.datos
+        .filter(d => d.habitat_id === habitatId)
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // más reciente primero
       setSensor(datosFiltrados[0]);
     } catch (err) {
       console.error("Error al cargar sensores:", err);
@@ -24,7 +26,9 @@ function HabitatCard({ habitatId, releId }) {
     try {
       const res = await fetch('https://habitat-api.vercel.app/api/reles');
       const json = await res.json();
-      const registros = json.datos.filter(r => r.habitat_id === habitatId && r.rele === releId);
+      const registros = json.datos
+        .filter(r => r.habitat_id === habitatId && r.rele === releId)
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // más reciente primero
       if (registros.length > 0) {
         setEstadoRele(registros[0].estado);
       }
@@ -59,7 +63,7 @@ function HabitatCard({ habitatId, releId }) {
 
       {estadoRele !== null ? (
         <div>
-          <p>Relé {releId}: {estadoRele ? '🟢 Encendido' : '⚫ Apagado'}</p>
+          <p>Relé {releId}: {estadoRele ? '🟢 Encendido' : '🔴 Apagado'}</p>
           <button onClick={toggleRele}>
             {estadoRele ? 'Apagar' : 'Encender'}
           </button>
