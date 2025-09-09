@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 
-function HabitatCard({ habitatId }) {
+function HabitatCard({ habitatId, releId }) {
   const [sensor, setSensor] = useState(null);
-  const [reles, setReles] = useState([]);
+  const [estadoRele, setEstadoRele] = useState(null);
 
   useEffect(() => {
     cargarSensor();
-    cargarReles();
+    cargarEstadoRele();
   }, []);
 
   async function cargarSensor() {
@@ -20,27 +20,30 @@ function HabitatCard({ habitatId }) {
     }
   }
 
-  async function cargarReles() {
+  async function cargarEstadoRele() {
     try {
       const res = await fetch('https://habitat-api.vercel.app/api/reles');
       const json = await res.json();
-      const datosFiltrados = json.datos.filter(r => r.habitat_id === habitatId);
-      setReles(datosFiltrados);
+      const registros = json.datos.filter(r => r.habitat_id === habitatId && r.rele === releId);
+      if (registros.length > 0) {
+        setEstadoRele(registros[0].estado);
+      }
     } catch (err) {
-      console.error("Error al cargar relés:", err);
+      console.error("Error al cargar relé:", err);
     }
   }
 
-  async function controlarRele(rele, estado) {
+  async function toggleRele() {
     try {
+      const nuevoEstado = !estadoRele;
       await fetch('https://habitat-api.vercel.app/api/control', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ habitat_id: habitatId, rele, estado })
+        body: JSON.stringify({ habitat_id: habitatId, rele: releId, estado: nuevoEstado })
       });
-      cargarReles(); // Actualiza estado tras el cambio
+      setEstadoRele(nuevoEstado);
     } catch (err) {
-      console.error("Error al controlar relé:", err);
+      console.error("Error al cambiar estado del relé:", err);
     }
   }
 
@@ -54,16 +57,15 @@ function HabitatCard({ habitatId }) {
         <p>🔄 Cargando sensores...</p>
       )}
 
-      {reles.length > 0 ? (
-        reles.map(r => (
-          <div key={r.rele}>
-            <p>Relé {r.rele}: {r.estado ? '🟢 Encendido' : '⚫ Apagado'}</p>
-            <button onClick={() => controlarRele(r.rele, true)}>Encender</button>
-            <button onClick={() => controlarRele(r.rele, false)}>Apagar</button>
-          </div>
-        ))
+      {estadoRele !== null ? (
+        <div>
+          <p>Relé {releId}: {estadoRele ? '🟢 Encendido' : '⚫ Apagado'}</p>
+          <button onClick={toggleRele}>
+            {estadoRele ? 'Apagar' : 'Encender'}
+          </button>
+        </div>
       ) : (
-        <p>⚠️ No hay relés registrados para este hábitat.</p>
+        <p>⚠️ No hay estado registrado para el relé {releId}.</p>
       )}
     </div>
   );
