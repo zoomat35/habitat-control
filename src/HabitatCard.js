@@ -24,10 +24,10 @@ function HabitatCard({ habitatId }) {
     try {
       const res = await fetch('https://habitat-api.vercel.app/api/reles');
       const json = await res.json();
-      console.log("Relés recibidos:", json.datos); // 👈 Diagnóstico
-      const filtrados = json.datos.filter(r => r.habitat_id === habitatId);
-      console.log("Filtrados:", filtrados); // 👈 Diagnóstico
-      setReles(filtrados);
+      console.log("Relés recibidos:", json.datos);
+      const datosFiltrados = json.datos.filter(r => r.habitat_id === habitatId);
+      console.log("Relés filtrados:", datosFiltrados);
+      setReles(datosFiltrados);
     } catch (err) {
       console.error("Error al cargar relés:", err);
     }
@@ -40,7 +40,7 @@ function HabitatCard({ habitatId }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ habitat_id: habitatId, rele, estado })
       });
-      cargarReles();
+      cargarReles(); // Actualiza estado tras el cambio
     } catch (err) {
       console.error("Error al controlar relé:", err);
     }
