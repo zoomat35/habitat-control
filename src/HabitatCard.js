@@ -10,40 +10,61 @@ function HabitatCard({ habitatId }) {
   }, []);
 
   async function cargarSensor() {
-    const res = await fetch('https://habitat-api.vercel.app/api/leer');
-    const json = await res.json();
-    setSensor(json.datos);
+    try {
+      const res = await fetch('https://habitat-api.vercel.app/api/leer');
+      const json = await res.json();
+      const datosFiltrados = json.datos.filter(d => d.habitat_id === habitatId);
+      setSensor(datosFiltrados[0]); // solo el más reciente
+    } catch (err) {
+      console.error("Error al cargar sensores:", err);
+    }
   }
 
   async function cargarReles() {
-    const res = await fetch('https://habitat-api.vercel.app/api/reles');
-    const json = await res.json();
-    const filtrados = json.datos.filter(r => r.habitat_id === habitatId);
-    setReles(filtrados);
+    try {
+      const res = await fetch('https://habitat-api.vercel.app/api/reles');
+      const json = await res.json();
+      const filtrados = json.datos.filter(r => r.habitat_id === habitatId);
+      setReles(filtrados);
+    } catch (err) {
+      console.error("Error al cargar relés:", err);
+    }
   }
 
   async function controlarRele(rele, estado) {
-    await fetch('https://habitat-api.vercel.app/api/control', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ habitat_id: habitatId, rele, estado })
-    });
-    cargarReles();
+    try {
+      await fetch('https://habitat-api.vercel.app/api/control', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ habitat_id: habitatId, rele, estado })
+      });
+      cargarReles(); // actualizar estado tras el cambio
+    } catch (err) {
+      console.error("Error al controlar relé:", err);
+    }
   }
 
   return (
     <div style={{ border: '1px solid #ccc', padding: '1rem', marginBottom: '1rem' }}>
       <h2>Hábitat {habitatId}</h2>
-      {sensor && (
+
+      {sensor ? (
         <p>🌡️ {sensor.temperatura}°C | 💧 {sensor.humedad}%</p>
+      ) : (
+        <p>🔄 Cargando sensores...</p>
       )}
-      {reles.map(r => (
-        <div key={r.rele}>
-          <p>Relé {r.rele}: {r.estado ? '🟢 Encendido' : '⚫ Apagado'}</p>
-          <button onClick={() => controlarRele(r.rele, true)}>Encender</button>
-          <button onClick={() => controlarRele(r.rele, false)}>Apagar</button>
-        </div>
-      ))}
+
+      {reles.length > 0 ? (
+        reles.map(r => (
+          <div key={r.rele}>
+            <p>Relé {r.rele}: {r.estado ? '🟢 Encendido' : '⚫ Apagado'}</p>
+            <button onClick={() => controlarRele(r.rele, true)}>Encender</button>
+            <button onClick={() => controlarRele(r.rele, false)}>Apagar</button>
+          </div>
+        ))
+      ) : (
+        <p>⚠️ No hay relés registrados para este hábitat.</p>
+      )}
     </div>
   );
 }
