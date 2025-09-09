@@ -24,9 +24,7 @@ function HabitatCard({ habitatId }) {
     try {
       const res = await fetch('https://habitat-api.vercel.app/api/reles');
       const json = await res.json();
-      console.log("Relés recibidos:", json.datos);
       const datosFiltrados = json.datos.filter(r => r.habitat_id === habitatId);
-      console.log("Relés filtrados:", datosFiltrados);
       setReles(datosFiltrados);
     } catch (err) {
       console.error("Error al cargar relés:", err);
