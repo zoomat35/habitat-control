@@ -11,8 +11,8 @@ function App() {
       console.log('Respuesta del backend:', json);
       alert(`Relé ${estado ? 'encendido' : 'apagado'} correctamente`);
     } catch (err) {
-      console.error('Error al enviar al backend:', err);
-      alert('Error al controlar el relé');
+      console.error('Error al controlar relé:', err);
+      alert('Error al enviar la petición');
     }
   }
 
