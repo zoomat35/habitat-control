@@ -1,4 +1,4 @@
-import ReleBoton from './ReleBoton';
+import ReleBoton from './components/ReleBoton';
 
 function App() {
   return (
@@ -8,6 +8,7 @@ function App() {
       <h2>Hábitat 1</h2>
       <ReleBoton habitatId={1} releId={1} />
       <ReleBoton habitatId={1} releId={2} />
+      <ReleBoton habitatId={1} releId={3} />
 
       <h2>Hábitat 2</h2>
       <ReleBoton habitatId={2} releId={1} />
