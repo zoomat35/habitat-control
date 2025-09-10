@@ -10,16 +10,18 @@ function ReleBoton({ habitatId, releId }) {
 
   async function cargarEstado() {
     try {
-      const res = await fetch('https://habitat-api.vercel.app/api/reles');
+      const res = await fetch('https://habitat-api.vercel.app/api/estado-reles');
       const json = await res.json();
-      const registros = json.datos
-        .filter(r => r.habitat_id === habitatId && r.rele === releId)
-        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-      if (registros.length > 0) {
-        setEstado(registros[0].estado);
+
+      const registro = json.datos.find(
+        r => r.habitat_id === habitatId && r.rele === releId
+      );
+
+      if (registro) {
+        setEstado(registro.estado);
       }
     } catch (err) {
-      console.error("Error al cargar estado:", err);
+      console.error("Error al cargar estado consolidado:", err);
     }
   }
 
