@@ -1,26 +1,45 @@
+import { useEffect, useState } from 'react';
+
 function App() {
-  async function controlarRele(estado) {
+  const [reles, setReles] = useState([]);
+
+  useEffect(() => {
+    fetch('https://habitat-api.vercel.app/api/estado-reles')
+      .then(res => res.json())
+      .then(json => setReles(json.datos))
+      .catch(err => console.error('Error al cargar reles:', err));
+  }, []);
+
+  async function controlarRele(habitat_id, rele, estado) {
     try {
-      const res = await fetch('https://habitat-api.vercel.app/api/control', {
+      await fetch('https://habitat-api.vercel.app/api/control', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ habitat_id: 1, rele: 1, estado })
+        body: JSON.stringify({ habitat_id, rele, estado })
       });
-
-      const json = await res.json();
-      console.log('Respuesta del backend:', json);
-      alert(`Relé ${estado ? 'encendido' : 'apagado'} correctamente`);
+      setReles(prev =>
+        prev.map(r =>
+          r.habitat_id === habitat_id && r.rele === rele
+            ? { ...r, estado }
+            : r
+        )
+      );
     } catch (err) {
       console.error('Error al controlar relé:', err);
-      alert('Error al enviar la petición');
     }
   }
 
   return (
     <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
-      <h1>habita_1</h1>
-      <button onClick={() => controlarRele(true)}>Encender</button>
-      <button onClick={() => controlarRele(false)} style={{ marginLeft: '1rem' }}>Apagar</button>
+      <h1>Panel de Control de Hábitats</h1>
+      {reles.map(({ habitat_id, rele, estado }) => (
+        <div key={`${habitat_id}-${rele}`} style={{ marginBottom: '1rem' }}>
+          <h2>Hábitat {habitat_id}</h2>
+          <p>Relé {rele}: {estado ? '🟢 Encendido' : '⚫ Apagado'}</p>
+          <button onClick={() => controlarRele(habitat_id, rele, true)}>Encender</button>
+          <button onClick={() => controlarRele(habitat_id, rele, false)} style={{ marginLeft: '1rem' }}>Apagar</button>
+        </div>
+      ))}
     </div>
   );
 }
