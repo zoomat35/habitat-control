@@ -67,9 +67,7 @@ function HabitatCard({ habitatId, releId }) {
 
       {estadoRele !== null ? (
         <div>
-          <p>
-            Relé {releId}: {estadoRele ? '🟢 Encendido' : '⚫ Apagado'}
-          </p>
+          <p>Relé {releId}: {estadoRele ? '🟢 Encendido' : '⚫ Apagado'}</p>
           <button onClick={toggleRele} disabled={cargando}>
             {cargando ? 'Actualizando...' : estadoRele ? 'Apagar' : 'Encender'}
           </button>
