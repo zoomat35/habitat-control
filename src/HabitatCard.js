@@ -15,10 +15,10 @@ function HabitatCard({ habitatId, releId }) {
 
       const registros = json.datos
         .filter(r => r.habitat_id === habitatId && r.rele === releId)
-        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // más reciente primero
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
       if (registros.length > 0) {
-        setEstadoRele(registros[0].estado); // solo el último
+        setEstadoRele(registros[0].estado);
       }
     } catch (err) {
       console.error("Error al cargar estado del relé:", err);
@@ -43,20 +43,14 @@ function HabitatCard({ habitatId, releId }) {
   }
 
   return (
-    <div style={{ border: '1px solid #ccc', padding: '1rem', marginBottom: '1rem' }}>
-      <h2>Hábitat {habitatId}</h2>
-      {estadoRele !== null ? (
-        <div>
-          <p>Relé {releId}: {estadoRele ? '🟢 Encendido' : '⚫ Apagado'}</p>
-          <button onClick={toggleRele} disabled={cargando}>
-            {cargando ? 'Actualizando...' : estadoRele ? 'Apagar' : 'Encender'}
-          </button>
-        </div>
-      ) : (
-        <p>⚠️ Estado no disponible</p>
-      )}
+    <div style={{ marginBottom: '1rem' }}>
+      <p>Relé {releId}: {estadoRele ? '🟢 Encendido' : '⚫ Apagado'}</p>
+      <button onClick={toggleRele} disabled={cargando}>
+        {cargando ? 'Actualizando...' : estadoRele ? 'Apagar' : 'Encender'}
+      </button>
     </div>
   );
 }
 
 export default HabitatCard;
+
