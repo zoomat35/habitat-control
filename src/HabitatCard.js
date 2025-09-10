@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 function HabitatCard({ habitatId, releId }) {
   const [sensor, setSensor] = useState(null);
   const [estadoRele, setEstadoRele] = useState(null);
+  const [cargando, setCargando] = useState(false);
 
   useEffect(() => {
     cargarSensor();
@@ -15,7 +16,7 @@ function HabitatCard({ habitatId, releId }) {
       const json = await res.json();
       const datosFiltrados = json.datos
         .filter(d => d.habitat_id === habitatId)
-        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // más reciente primero
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
       setSensor(datosFiltrados[0]);
     } catch (err) {
       console.error("Error al cargar sensores:", err);
@@ -28,7 +29,7 @@ function HabitatCard({ habitatId, releId }) {
       const json = await res.json();
       const registros = json.datos
         .filter(r => r.habitat_id === habitatId && r.rele === releId)
-        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // más reciente primero
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
       if (registros.length > 0) {
         setEstadoRele(registros[0].estado);
       }
@@ -39,6 +40,7 @@ function HabitatCard({ habitatId, releId }) {
 
   async function toggleRele() {
     try {
+      setCargando(true);
       const nuevoEstado = !estadoRele;
       await fetch('https://habitat-api.vercel.app/api/control', {
         method: 'POST',
@@ -48,6 +50,8 @@ function HabitatCard({ habitatId, releId }) {
       setEstadoRele(nuevoEstado);
     } catch (err) {
       console.error("Error al cambiar estado del relé:", err);
+    } finally {
+      setCargando(false);
     }
   }
 
@@ -63,9 +67,11 @@ function HabitatCard({ habitatId, releId }) {
 
       {estadoRele !== null ? (
         <div>
-          <p>Relé {releId}: {estadoRele ? '🟢 Encendido' : '🔴 Apagado'}</p>
-          <button onClick={toggleRele}>
-            {estadoRele ? 'Apagar' : 'Encender'}
+          <p>
+            Relé {releId}: {estadoRele ? '🟢 Encendido' : '⚫ Apagado'}
+          </p>
+          <button onClick={toggleRele} disabled={cargando}>
+            {cargando ? 'Actualizando...' : estadoRele ? 'Apagar' : 'Encender'}
           </button>
         </div>
       ) : (
