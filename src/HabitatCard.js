@@ -25,16 +25,14 @@ function HabitatCard({ habitatId, releId }) {
 
   async function cargarEstadoRele() {
     try {
-      const res = await fetch('https://habitat-api.vercel.app/api/reles');
+      const res = await fetch('https://habitat-api.vercel.app/api/estado-reles');
       const json = await res.json();
-      const registros = json.datos
-        .filter(r => r.habitat_id === habitatId && r.rele === releId)
-        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-      if (registros.length > 0) {
-        setEstadoRele(registros[0].estado);
+      const registro = json.datos.find(r => r.habitat_id === habitatId && r.rele === releId);
+      if (registro) {
+        setEstadoRele(registro.estado);
       }
     } catch (err) {
-      console.error("Error al cargar relé:", err);
+      console.error("Error al cargar estado del relé:", err);
     }
   }
 
