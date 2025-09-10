@@ -8,29 +8,19 @@ function App() {
       });
 
       const json = await res.json();
-      console.log(json);
+      console.log('Respuesta del backend:', json);
       alert(`Relé ${estado ? 'encendido' : 'apagado'} correctamente`);
     } catch (err) {
+      console.error('Error al enviar al backend:', err);
       alert('Error al controlar el relé');
-      console.error(err);
     }
   }
 
   return (
     <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
       <h1>habita_1</h1>
-      <button
-        onClick={() => controlarRele(true)}
-        style={{ marginRight: '1rem', padding: '0.5rem 1rem' }}
-      >
-        Encender
-      </button>
-      <button
-        onClick={() => controlarRele(false)}
-        style={{ padding: '0.5rem 1rem' }}
-      >
-        Apagar
-      </button>
+      <button onClick={() => controlarRele(true)}>Encender</button>
+      <button onClick={() => controlarRele(false)} style={{ marginLeft: '1rem' }}>Apagar</button>
     </div>
   );
 }
