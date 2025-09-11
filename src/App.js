@@ -1,6 +1,3 @@
-import React from 'react';
-import SensorInfo from './SensorInfo';
-
 function App() {
   const controlarRele = async (habitat_id, rele, estado) => {
     try {
@@ -20,15 +17,21 @@ function App() {
   return (
     <div style={{ padding: '2rem', fontFamily: 'Arial, sans-serif' }}>
       <h1>🌿 Control de Hábitat 1</h1>
-
       <div style={{ marginBottom: '1rem' }}>
         <button onClick={() => controlarRele(1, 1, true)}>Encender</button>
         <button onClick={() => controlarRele(1, 1, false)}>Apagar</button>
       </div>
-
       <SensorInfo habitat_id={1} />
+
+      <hr style={{ margin: '2rem 0' }} />
+
+      <h1>🌿 Control de Hábitat 2</h1>
+      <div style={{ marginBottom: '1rem' }}>
+        <button onClick={() => controlarRele(2, 1, true)}>Encender</button>
+        <button onClick={() => controlarRele(2, 1, false)}>Apagar</button>
+      </div>
+      <SensorInfo habitat_id={2} />
     </div>
   );
 }
 
-export default App;
