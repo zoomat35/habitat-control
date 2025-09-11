@@ -7,20 +7,21 @@ export default function SensorInfo({ habitat_id }) {
     fetch(`https://habitat-api.vercel.app/api/ultimo-sensor?habitat_id=${habitat_id}`)
       .then(res => res.json())
       .then(data => {
-        if (data?.temperatura && data?.humedad) {
+        console.log("📦 Datos recibidos:", data);
+        if (typeof data.temperatura === 'number' && typeof data.humedad === 'number') {
           setDatos(data);
         } else {
-          console.warn("Datos inválidos:", data);
+          console.warn("⚠️ Datos inválidos:", data);
           setDatos(null);
         }
       })
       .catch(err => {
-        console.error("Error al cargar sensores:", err);
+        console.error("❌ Error al cargar sensores:", err);
         setDatos(null);
       });
   }, [habitat_id]);
 
-  if (!datos) return <p>🌡️ Sin datos de sensores</p>;
+  if (!datos) return <p>🔄 Cargando sensores...</p>;
 
   return (
     <div>
