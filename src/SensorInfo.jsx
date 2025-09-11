@@ -8,8 +8,15 @@ export default function SensorInfo({ habitat_id }) {
       .then(res => res.json())
       .then(data => {
         console.log("📦 Datos recibidos:", data);
-        if (typeof data.temperatura === 'number' && typeof data.humedad === 'number') {
-          setDatos(data);
+        const temp = Number(data.temperatura);
+        const hum = Number(data.humedad);
+
+        if (!isNaN(temp) && !isNaN(hum)) {
+          setDatos({
+            temperatura: temp,
+            humedad: hum,
+            timestamp: data.timestamp
+          });
         } else {
           console.warn("⚠️ Datos inválidos:", data);
           setDatos(null);
@@ -33,3 +40,4 @@ export default function SensorInfo({ habitat_id }) {
     </div>
   );
 }
+
