@@ -5,7 +5,7 @@ export default function SensorInfo({ habitat_id }) {
 
   useEffect(() => {
     const cargarDatos = () => {
-      fetch(`https://habitat-api.vercel.app/api/ultimo-sensor?habitat_id=${habitat_id}`)
+      fetch(`https://habitat-api.vercel.app/api/estado-sensores?habitat_id=${habitat_id}`)
         .then(res => res.json())
         .then(data => {
           console.log("📦 Datos recibidos:", data);
