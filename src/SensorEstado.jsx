@@ -4,21 +4,19 @@ export default function SensorEstado({ habitat_id }) {
   const [sensor, setSensor] = useState(null);
 
   useEffect(() => {
-    fetch(`https://habitat-api.vercel.app/api/estado-sensores?habitat_id=${habitat_id}`)
-      .then(res => res.json())
-      .then(data => {
+    const obtenerDatos = async () => {
+      try {
+        const res = await fetch(`https://habitat-api.vercel.app/api/estado-sensores?habitat_id=${habitat_id}`);
+        const data = await res.json();
         console.log("📡 Sensor recibido:", data);
-        if (data && typeof data.temperatura === 'number' && typeof data.humedad === 'number') {
-          setSensor(data);
-        } else {
-          console.warn("⚠️ Datos inválidos o incompletos:", data);
-          setSensor(null);
-        }
-      })
-      .catch(err => {
+        setSensor(data);
+      } catch (err) {
         console.error("❌ Error al obtener sensores:", err);
         setSensor(null);
-      });
+      }
+    };
+
+    obtenerDatos();
   }, [habitat_id]);
 
   if (!sensor) return <p>Sensor no disponible</p>;
