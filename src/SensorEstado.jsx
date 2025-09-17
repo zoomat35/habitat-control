@@ -8,14 +8,7 @@ export default function SensorEstado({ habitat_id }) {
       .then(res => res.json())
       .then(data => {
         console.log("📡 Sensor recibido:", data);
-        const temp = Number(data.temperatura);
-        const hum = Number(data.humedad);
-
-        if (!isNaN(temp) && !isNaN(hum)) {
-          setSensor(data);
-        } else {
-          setSensor(null);
-        }
+        setSensor(data); // No validamos, solo mostramos
       })
       .catch(err => {
         console.error("❌ Error al obtener sensores:", err);
@@ -27,9 +20,9 @@ export default function SensorEstado({ habitat_id }) {
 
   return (
     <div>
-      <p>🌡️ Temp: {sensor.temperatura.toFixed(1)} °C</p>
-      <p>💧 Hum: {sensor.humedad.toFixed(1)} %</p>
-      <p>🕒 {new Date(sensor.timestamp).toLocaleString()}</p>
+      <p>🌡️ Temp: {sensor.temperatura ? sensor.temperatura + ' °C' : 'N/A'}</p>
+      <p>💧 Hum: {sensor.humedad ? sensor.humedad + ' %' : 'N/A'}</p>
+      <p>🕒 {sensor.timestamp ? new Date(sensor.timestamp).toLocaleString() : 'Sin timestamp'}</p>
     </div>
   );
 }
