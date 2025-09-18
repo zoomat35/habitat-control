@@ -46,7 +46,7 @@ function App() {
           <SensorEstado habitat_id={habitat_id} />
 
           {reles.filter(r => r.habitat_id === habitat_id).length > 0 ? (
-            reles
+            [...reles]
               .filter(r => r.habitat_id === habitat_id)
               .sort((a, b) => a.rele - b.rele)
               .map(({ rele, estado }) => (
@@ -66,4 +66,3 @@ function App() {
 }
 
 export default App;
-
