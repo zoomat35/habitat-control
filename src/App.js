@@ -1,3 +1,4 @@
+// Forzar redeploy del frontend
 import SensorEstado from './SensorEstado';
 
 function App() {
@@ -13,3 +14,4 @@ function App() {
 }
 
 export default App;
+
