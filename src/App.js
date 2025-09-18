@@ -1,5 +1,6 @@
 // Forzar redeploy del frontend
 import SensorEstado from './SensorEstado';
+import RelesControl from './RelesControl';
 
 function App() {
   return (
@@ -14,4 +15,5 @@ function App() {
 }
 
 export default App;
+
 
