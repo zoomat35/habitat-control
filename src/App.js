@@ -7,7 +7,10 @@ function App() {
   useEffect(() => {
     fetch('https://habitat-api.vercel.app/api/estado-reles')
       .then(res => res.json())
-      .then(json => setReles(json.datos))
+      .then(json => {
+        console.log('Relés recibidos:', json);
+        setReles(json.datos || []);
+      })
       .catch(err => console.error('Error al cargar reles:', err));
   }, []);
 
@@ -38,6 +41,7 @@ function App() {
         <div key={habitat_id} style={{ marginBottom: '2rem' }}>
           <h2>Hábitat {habitat_id}</h2>
           <SensorEstado habitat_id={habitat_id} />
+
           {reles
             .filter(r => r.habitat_id === habitat_id)
             .map(({ rele, estado }) => (
@@ -54,3 +58,4 @@ function App() {
 }
 
 export default App;
+
