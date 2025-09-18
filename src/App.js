@@ -48,6 +48,7 @@ function App() {
           {reles.filter(r => r.habitat_id === habitat_id).length > 0 ? (
             reles
               .filter(r => r.habitat_id === habitat_id)
+              .sort((a, b) => a.rele - b.rele)
               .map(({ rele, estado }) => (
                 <div key={`${habitat_id}-${rele}`} style={{ marginTop: '1rem' }}>
                   <p>Relé {rele}: {estado ? '🟢 Encendido' : '⚫ Apagado'}</p>
@@ -65,3 +66,4 @@ function App() {
 }
 
 export default App;
+
