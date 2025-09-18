@@ -9,9 +9,12 @@ function App() {
       .then(res => res.json())
       .then(json => {
         console.log('Relés recibidos:', json);
-        setReles(json.datos || []);
+        setReles(Array.isArray(json.datos) ? json.datos : []);
       })
-      .catch(err => console.error('Error al cargar reles:', err));
+      .catch(err => {
+        console.error('Error al cargar reles:', err);
+        setReles([]);
+      });
   }, []);
 
   async function controlarRele(habitat_id, rele, estado) {
@@ -42,15 +45,19 @@ function App() {
           <h2>Hábitat {habitat_id}</h2>
           <SensorEstado habitat_id={habitat_id} />
 
-          {reles
-            .filter(r => r.habitat_id === habitat_id)
-            .map(({ rele, estado }) => (
-              <div key={`${habitat_id}-${rele}`} style={{ marginTop: '1rem' }}>
-                <p>Relé {rele}: {estado ? '🟢 Encendido' : '⚫ Apagado'}</p>
-                <button onClick={() => controlarRele(habitat_id, rele, true)}>Encender</button>
-                <button onClick={() => controlarRele(habitat_id, rele, false)} style={{ marginLeft: '1rem' }}>Apagar</button>
-              </div>
-            ))}
+          {reles.filter(r => r.habitat_id === habitat_id).length > 0 ? (
+            reles
+              .filter(r => r.habitat_id === habitat_id)
+              .map(({ rele, estado }) => (
+                <div key={`${habitat_id}-${rele}`} style={{ marginTop: '1rem' }}>
+                  <p>Relé {rele}: {estado ? '🟢 Encendido' : '⚫ Apagado'}</p>
+                  <button onClick={() => controlarRele(habitat_id, rele, true)}>Encender</button>
+                  <button onClick={() => controlarRele(habitat_id, rele, false)} style={{ marginLeft: '1rem' }}>Apagar</button>
+                </div>
+              ))
+          ) : (
+            <p>🔌 Relés no disponibles</p>
+          )}
         </div>
       ))}
     </div>
@@ -58,4 +65,3 @@ function App() {
 }
 
 export default App;
-
