@@ -10,10 +10,15 @@ function SensorEstado({ habitat_id }) {
         console.log(`📡 Sensor recibido para hábitat ${habitat_id}:`, json);
         setSensor(json.datos || null);
       })
-      .catch(err => console.error('Error al cargar sensor:', err));
+      .catch(err => {
+        console.error('Error al cargar sensor:', err);
+        setSensor(null);
+      });
   }, [habitat_id]);
 
-  if (!sensor || !sensor.temperatura) return <p>Sensor no disponible</p>;
+  if (!sensor || typeof sensor.temperatura !== 'number') {
+    return <p>Sensor no disponible</p>;
+  }
 
   return (
     <div style={{ marginBottom: '1rem' }}>
